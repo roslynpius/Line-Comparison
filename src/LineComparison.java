@@ -3,9 +3,9 @@ import java.util.Scanner;
 /**
  * The LineComparison class calculates the length of a line segment
  * using Cartesian coordinates (x, y) based on user input. It also
- * provides a method to check the equality of two lines based on their endpoints.
+ * provides a method to compare two lines based on their lengths.
  */
-public class LineComparison {
+public class LineComparison implements Comparable<LineComparison> {
     private final int x1, x2, y1, y2;
 
     /**
@@ -33,22 +33,19 @@ public class LineComparison {
     }
 
     /**
-     * Checks the equality of two lines based on their endpoints.
+     * Compares two lines based on their lengths.
      *
      * @param otherLine The other LineComparison object to compare.
-     * @return true if the lines have the same endpoints, false otherwise.
+     * @return 0 if the lines are equal, a positive value if this line is greater,
+     *         a negative value if this line is smaller.
      */
-    public boolean isEqual(LineComparison otherLine) {
-        return this.x1 == otherLine.x1 && this.y1 == otherLine.y1 &&
-                this.x2 == otherLine.x2 && this.y2 == otherLine.y2;
-    }
-
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        LineComparison that = (LineComparison) obj;
-        return x1 == that.x1 && x2 == that.x2 && y1 == that.y1 && y2 == that.y2;
+    public int compareTo(LineComparison otherLine) {
+        double thisLength = this.calculateLength();
+        double otherLength = otherLine.calculateLength();
+
+        // Compare lengths
+        return Double.compare(thisLength, otherLength);
     }
 
     public static void main(String[] args) {
@@ -81,17 +78,16 @@ public class LineComparison {
 
         LineComparison line2 = new LineComparison(x3, y3, x4, y4);
 
-        // Calculate and display the lengths of both lines
-        double length1 = line1.calculateLength();
-        double length2 = line2.calculateLength();
-        System.out.println("Length of Line 1: " + length1);
-        System.out.println("Length of Line 2: " + length2);
+        // Compare lengths of lines
+        int result = line1.compareTo(line2);
 
-        // Check equality of lines
-        if (line1.isEqual(line2)) {
-            System.out.println("Both lines have the same endpoints.");
+        // Display the result of the comparison
+        if (result == 0) {
+            System.out.println("Both lines are equal in length.");
+        } else if (result > 0) {
+            System.out.println("Line 1 is greater than Line 2 in length.");
         } else {
-            System.out.println("Lines do not have the same endpoints.");
+            System.out.println("Line 1 is smaller than Line 2 in length.");
         }
     }
 }
